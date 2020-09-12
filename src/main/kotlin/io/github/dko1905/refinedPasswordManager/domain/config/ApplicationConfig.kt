@@ -1,5 +1,8 @@
 package io.github.dko1905.refinedPasswordManager.domain.config
 
+import io.github.dko1905.refinedPasswordManager.domain.repository.AccountRepository
+import io.github.dko1905.refinedPasswordManager.domain.repository.AccountRepositorySQLiteImpl
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.sqlite.SQLiteDataSource
@@ -7,7 +10,10 @@ import javax.sql.DataSource
 
 @Configuration
 class ApplicationConfig {
-
+	@Bean
+	fun accountRepositoryProvider(dataSource: DataSource): AccountRepository{
+		return AccountRepositorySQLiteImpl(dataSource)
+	}
 
 	@Bean
 	fun dataSourceProvider(): DataSource{
@@ -21,7 +27,7 @@ class ApplicationConfig {
 			statement.execute("CREATE TABLE IF NOT EXISTS ACCOUNT" +
 					"(" +
 					"ID INTEGER PRIMARY KEY," +
-					"USERNAME TEXT NOT NULL," +
+					"USERNAME TEXT UNIQUE NOT NULL," +
 					"PASSWORD TEXT NOT NULL," +
 					"ACCOUNT_ROLE INTEGER NOT NULL" +
 					");")
