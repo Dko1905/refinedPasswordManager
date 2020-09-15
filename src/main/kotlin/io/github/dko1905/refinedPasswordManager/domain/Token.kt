@@ -6,7 +6,7 @@ import java.util.UUID
 
 data class Token(
 	@JsonProperty("accountId")
-	var accountId: Long?,
+	var accountId: Long,
 	@JsonProperty("uuid")
 	val uuid: UUID,
 	@JsonProperty("expirationDate")

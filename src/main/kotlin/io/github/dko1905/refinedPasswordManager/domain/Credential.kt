@@ -3,8 +3,10 @@ package io.github.dko1905.refinedPasswordManager.domain
 import com.fasterxml.jackson.annotation.JsonProperty
 
 data class Credential(
+	@JsonProperty("id")
+	var id: Long?,
 	@JsonProperty("accountId")
-	var accountId: Long?,
+	val accountId: Long,
 	@JsonProperty("website")
 	val url: String,
 	@JsonProperty("username")

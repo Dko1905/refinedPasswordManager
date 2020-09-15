@@ -1,6 +1,7 @@
-package io.github.dko1905.refinedPasswordManager.domain.repository
+package io.github.dko1905.refinedPasswordManager.repository
 
-import com.sun.el.parser.Token
+import io.github.dko1905.refinedPasswordManager.domain.Token
+import io.github.dko1905.refinedPasswordManager.domain.exception.DuplicateKeyException
 import org.springframework.stereotype.Repository
 import java.sql.SQLException
 import java.util.UUID
@@ -11,8 +12,9 @@ interface TokenRepository {
 	/**
 	 * Replace the token at the specified id, if location doesn't exist will create the new location
 	 * @exception SQLException Thrown if something went wrong with the database
+	 * @exception DuplicateKeyException Thrown if the uuid is already taken, very rare.
 	 */
-	@Throws(SQLException::class)
+	@Throws(SQLException::class, DuplicateKeyException::class)
 	fun putToken(token: Token)
 
 	/**
@@ -21,7 +23,7 @@ interface TokenRepository {
 	 * @exception SQLException Thrown if something went wrong with the database
 	 */
 	@Throws(SQLException::class)
-	fun getToken(userId: Long): Token?
+	fun getToken(accountId: Long): Token?
 
 	/**
 	 * Get token by the specified uuid

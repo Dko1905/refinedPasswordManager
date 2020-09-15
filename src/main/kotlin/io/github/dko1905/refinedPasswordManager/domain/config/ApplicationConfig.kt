@@ -1,7 +1,6 @@
 package io.github.dko1905.refinedPasswordManager.domain.config
 
-import io.github.dko1905.refinedPasswordManager.domain.repository.AccountRepository
-import io.github.dko1905.refinedPasswordManager.domain.repository.AccountRepositorySQLiteImpl
+import io.github.dko1905.refinedPasswordManager.repository.*
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -11,8 +10,18 @@ import javax.sql.DataSource
 @Configuration
 class ApplicationConfig {
 	@Bean
-	fun accountRepositoryProvider(dataSource: DataSource): AccountRepository{
+	fun accountRepositoryProvider(@Autowired dataSource: DataSource): AccountRepository{
 		return AccountRepositorySQLiteImpl(dataSource)
+	}
+
+	@Bean
+	fun credentialRepositoryProvider(@Autowired dataSource: DataSource): CredentialRepository{
+		return CredentialRepositorySQLiteImpl(dataSource)
+	}
+
+	@Bean
+	fun tokenRepositoryProvider(@Autowired dataSource: DataSource): TokenRepository{
+		return TokenRepositorySQLiteImpl(dataSource)
 	}
 
 	@Bean
@@ -33,16 +42,18 @@ class ApplicationConfig {
 					");")
 			statement.execute("CREATE TABLE IF NOT EXISTS CREDENTIAL" +
 					"(" +
-					"ACCOUNT_ID INTEGER PRIMARY KEY," +
+					"ID INTEGER PRIMARY KEY," +
+					"ACCOUNT_ID INTEGER," +
 					"URL TEXT NOT NULL," +
 					"USERNAME TEXT NOT NULL," +
 					"PASSWORD TEXT NOT NULL," +
-					"EXTRA TEXT NOT NULL" +
+					"EXTRA TEXT NOT NULL," +
+					"FOREIGN KEY(ACCOUNT_ID) REFERENCES ACCOUNT(ID)" +
 					");")
 			statement.execute("CREATE TABLE IF NOT EXISTS TOKEN" +
 					"(" +
 					"ACCOUNT_ID INTEGER PRIMARY KEY," +
-					"UUID TEXT NOT NULL," +
+					"UUID TEXT UNIQUE NOT NULL," +
 					"EXPIRATION_DATE INTEGER NOT NULL" +
 					");")
 		}

@@ -1,7 +1,6 @@
-package io.github.dko1905.refinedPasswordManager.domain.repository
+package io.github.dko1905.refinedPasswordManager.repository
 
 import io.github.dko1905.refinedPasswordManager.domain.Credential
-import io.github.dko1905.refinedPasswordManager.domain.exception.DuplicateKeyException
 import io.github.dko1905.refinedPasswordManager.domain.exception.NotFoundException
 import org.springframework.stereotype.Repository
 import java.sql.SQLException
@@ -19,6 +18,7 @@ interface CredentialRepository {
 
 	/**
 	 * Remove credential from database
+	 * @param id The id of the credential, not the account id
 	 * @exception SQLException Thrown exception if there was any problems with the database
 	 * @exception NotFoundException Thrown if the credential wasn't found
 	 */
@@ -26,7 +26,7 @@ interface CredentialRepository {
 	fun removeCredential(id: Long)
 
 	/**
-	 * Replace the credential
+	 * Replace the credential, at the specified id
 	 * @exception SQLException Thrown exception if there was any problems with the database
 	 * @exception NotFoundException Thrown if the credential wasn't found
 	 */
@@ -34,12 +34,20 @@ interface CredentialRepository {
 	fun replaceCredential(credential: Credential)
 
 	/**
-	 * Get a credential from the database
+	 * Get a credential from the database, using id
 	 * @param id Specifies which credential to get
 	 * @exception SQLException Thrown exception if there was any problems with the database
 	 */
 	@Throws(SQLException::class)
 	fun getCredential(id: Long): Credential?
+
+	/**
+	 * Get all the credentials at the specified account
+	 * @param accountId The id of the owner account
+	 * @exception SQLException Thrown exception if there was any problems with the database
+	 */
+	@Throws(SQLException::class)
+	fun getAccountCredentials(accountId: Long): List<Credential>
 
 	/**
 	 * Get all credentials from the database

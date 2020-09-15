@@ -1,4 +1,4 @@
-package io.github.dko1905.refinedPasswordManager.domain.repository
+package io.github.dko1905.refinedPasswordManager.repository
 
 import io.github.dko1905.refinedPasswordManager.domain.Account
 import io.github.dko1905.refinedPasswordManager.domain.exception.DuplicateKeyException
@@ -30,8 +30,9 @@ interface AccountRepository{
 	 * Replace account at id in the account argument
 	 * @exception SQLException Thrown if something went wrong with the database
 	 * @exception NotFoundException Thrown if the account wasn't found
+	 * @exception DuplicateKeyException Thrown if the username isn't unique
 	 */
-	@Throws(SQLException::class, NotFoundException::class)
+	@Throws(SQLException::class, NotFoundException::class, DuplicateKeyException::class)
 	fun replaceAccount(account: Account)
 
 	/**
