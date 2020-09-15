@@ -1,0 +1,82 @@
+openapi: 3.0.0
+info:
+  title: "Refined Password Manager"
+  description: "This is a very naive password manager server, but it should be secure enough. Written in Kotlin with the Spring Boot framework."
+  version: 1.0.1
+  contact:
+    email: "Daniel.florescu1905@protonmail.ch"
+  license:
+    name: "BSD 2-Clause \"Simplified\" License"
+    url: "https://choosealicense.com/licenses/bsd-2-clause/"
+
+servers:
+  - url: https://api.pm.190405.xyz/v1
+tags:
+  - name: "credential"
+    description: "Operations on credentials"
+  - name: "auth"
+    description: "Authentication and token exchange"
+  - name: "user"
+    description: "User operations"
+
+paths:
+  /authenticate:
+    get:
+      tags:
+      - auth
+      summary: "Login, aka \"get\" a token"
+      responses:
+        '200':
+          description: "Returns a valid token"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Token'
+            application/xml:
+              schema:
+                $ref: '#/components/schemas/Token'
+        '401':
+          $ref: '#/components/responses/UnauthorizedError'
+        '403':
+          $ref: '#/components/responses/ForbiddenError'
+      security:
+        - basicAuth: []
+
+components:
+  schemas:
+    Token:
+      properties:
+        accountId:
+          type: integer
+        uuid:
+          type: string
+        expirationDate:
+          type: integer
+      xml:
+        name: 'token'
+      required:
+        - accountId
+        - uuid
+        - expirationDate
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+  responses:
+    InternalServerError:
+      description: Internal Server Error
+    ForbiddenError:
+      description: Authentication information is invalid, or you don't have the nessesay permissions
+      headers:
+        WWW_Authenticate:
+          schema:
+            type: string
+    UnauthorizedError:
+      description: Authentication information is missing
+      headers:
+        WWW_Authenticate:
+          schema:
+            type: string
+
+security:
+  - basicAuth: []
