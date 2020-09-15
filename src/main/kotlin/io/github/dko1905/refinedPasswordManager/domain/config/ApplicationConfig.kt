@@ -54,7 +54,8 @@ class ApplicationConfig {
 					"(" +
 					"ACCOUNT_ID INTEGER PRIMARY KEY," +
 					"UUID TEXT UNIQUE NOT NULL," +
-					"EXPIRATION_DATE INTEGER NOT NULL" +
+					"EXPIRATION_DATE INTEGER NOT NULL," +
+					"FOREIGN KEY(ACCOUNT_ID) REFERENCES ACCOUNT(ID)" +
 					");")
 		}
 
