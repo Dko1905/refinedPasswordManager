@@ -30,7 +30,7 @@ class TokenRepositoryTest(
 	}
 
 	@Test
-	fun `Add, check, check`(){
+	fun `Add, check`(){
 		val account = Account(null, "daniel", "1234", AccountRole.USER)
 
 		account.id = accountRepository.addAccount(account)

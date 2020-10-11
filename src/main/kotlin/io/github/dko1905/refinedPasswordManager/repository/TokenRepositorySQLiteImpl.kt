@@ -26,12 +26,12 @@ class TokenRepositorySQLiteImpl(
 					val updateCount = preparedStatement.executeUpdate()
 					if(updateCount <= 0){
 						// Manually insert new token
-						connection.prepareStatement("INSERT INTO TOKEN(ACCOUNT_ID, UUID, EXPIRATION_DATE) VALUES(?, ?, ?);").use { preparedStatement ->
-							preparedStatement.setLong(1, token.accountId)
-							preparedStatement.setString(2, token.uuid.toString())
-							preparedStatement.setLong(3, token.expirationDate.epochSecond)
+						connection.prepareStatement("INSERT INTO TOKEN(ACCOUNT_ID, UUID, EXPIRATION_DATE) VALUES(?, ?, ?);").use { preparedStatement1 ->
+							preparedStatement1.setLong(1, token.accountId)
+							preparedStatement1.setString(2, token.uuid.toString())
+							preparedStatement1.setLong(3, token.expirationDate.epochSecond)
 
-							val insertCount = preparedStatement.executeUpdate()
+							val insertCount = preparedStatement1.executeUpdate()
 							if(insertCount <= 0){
 								throw SQLException("No rows changed when adding new token")
 							}

@@ -20,7 +20,7 @@ class CredentialRepositorySQLiteImpl(
 		val id: Long
 		dataSource.connection.use { connection ->
 			connection.prepareStatement(
-				"INSERT OR ROLLBACK INTO CREDENTIAL(ACCOUNT_ID, URL, USERNAME, PASSWORD, EXTRA) VALUES(?, ?, ?, ?, ?);"
+				"INSERT INTO CREDENTIAL(ACCOUNT_ID, URL, USERNAME, PASSWORD, EXTRA) VALUES(?, ?, ?, ?, ?);"
 			).use { preparedStatement ->
 				preparedStatement.setLong(1, credential.accountId)
 				preparedStatement.setString(2, credential.url)
