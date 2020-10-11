@@ -23,8 +23,8 @@ class AuthService(
 		@Autowired private val tokenRepository: TokenRepository,
 		@Autowired private val env: Environment
 ) {
-	private val tokenMinTimeleft: Duration = Duration.ofSeconds(env.getProperty("token.minTimeLeft", "30").toLong())
-	private val tokenLifetime: Duration = Duration.ofSeconds(env.getProperty("token.lifetime", "15").toLong())
+	private val tokenMinTimeleft: Duration = Duration.ofSeconds(env.getProperty("token.minTimeLeft", "15").toLong())
+	private val tokenLifetime: Duration = Duration.ofSeconds(env.getProperty("token.lifetime", "60").toLong())
 	private val tokenFactory = TokenFactory(tokenLifetime)
 
 	/**
@@ -43,20 +43,16 @@ class AuthService(
 		if(account == null || account.id == null){
 			return null
 		} else if(account.password == password){
-			assert(account.id != null)
 			var token = tokenRepository.getToken(account.id!!)
 			if(token == null){
 				token = tokenFactory.createToken(account.id!!)
 				tokenRepository.putToken(token)
-				return token
-			} else if(token.expirationDate.minus(tokenMinTimeleft).isAfter(Instant.now())){
+			} else if(token.expirationDate.minus(tokenMinTimeleft).isBefore(Instant.now())){
 				// If old
 				token = tokenFactory.createToken(account.id!!)
-				return token
-			} else{
-				// If not old
-				return token
-			}
+				tokenRepository.putToken(token)
+			} // else not old
+			return token
 		} else{
 			return null
 		}

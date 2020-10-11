@@ -7,15 +7,14 @@ import java.time.Instant
 
 class TokenFactoryTest {
 	@Test
-	fun `Create 1 token, and check timing`(){
-		val lifetime = Duration.ofHours(10)
-		val lifetimeTestDifference = Duration.ofHours(1)
+	fun `test timing`(){
+		val lifetime = Duration.ofSeconds(10)
 		val userId = 123L
 
 		val tokenFactory = TokenFactory(lifetime)
 		val token = tokenFactory.createToken(userId)
 
 		assertEquals(userId, token.accountId)
-		assertTrue(token.expirationDate.isAfter(Instant.now().plus(lifetime.minus(lifetimeTestDifference))))
+		assertTrue(token.expirationDate.epochSecond > Instant.now().epochSecond)
 	}
 }
