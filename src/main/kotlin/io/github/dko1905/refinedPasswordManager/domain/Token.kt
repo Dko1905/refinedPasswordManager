@@ -11,6 +11,6 @@ data class Token(
 	@JsonProperty("uuid")
 	val uuid: UUID,
 	@JsonProperty("expirationDate")
-	@JsonFormat(shape = JsonFormat.Shape.NUMBER_INT, timezone = "UTC")
+	@JsonFormat(shape = JsonFormat.Shape.NUMBER, timezone = "UTC")
 	val expirationDate: Instant
 )

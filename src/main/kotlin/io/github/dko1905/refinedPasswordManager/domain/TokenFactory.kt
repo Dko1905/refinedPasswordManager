@@ -9,7 +9,7 @@ class TokenFactory(private val lifetime: Duration) {
 		return Token(
 			userId,
 			UUID.randomUUID(),
-			Instant.now().plus(lifetime)
+			Instant.ofEpochSecond(Instant.now().plus(lifetime).epochSecond)
 		)
 	}
 }
