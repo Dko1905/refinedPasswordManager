@@ -52,8 +52,9 @@ class CredentialService(
 		if(user == null){
 			throw AccessDeniedException("Failed to verify token")
 		}
-
-		assert(credential.id != null)
+		if(credential.id == null){
+			throw NotFoundException("Credential missing ID")
+		}
 
 		// Check for permissions and existence
 		val credentialOrig = credentialRepository.getCredential(credential.id!!)
@@ -78,7 +79,7 @@ class CredentialService(
 	 * @see Credential
 	 */
 	@Throws(SQLException::class, AccessDeniedException::class)
-	fun addCredential(token: Token, credential: Credential): Long? {
+	fun addCredential(token: Token, credential: Credential): Long {
 		val user = authService.verifyToken(token)
 		if(user == null){
 			throw AccessDeniedException("Failed to verify token")

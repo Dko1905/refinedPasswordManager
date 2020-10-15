@@ -91,7 +91,7 @@ class AuthService(
 	 * @see Token
 	 */
 	@Throws(SQLException::class, DuplicateKeyException::class, AccessDeniedException::class)
-	fun addAccount(token: Token, account: Account): Long? {
+	fun addAccount(token: Token, account: Account): Long {
 		val user = verifyToken(token)
 		if(user == null){
 			throw AccessDeniedException("Failed to verify token")
@@ -140,28 +140,38 @@ class AuthService(
 	fun verifyToken(token: Token): Account?{
 		// Get "secure" token
 		val secureToken = tokenRepository.getToken(token.uuid)
-		if(secureToken == null){
+		if(secureToken == null || secureToken.expirationDate.isBefore(Instant.now())){
 			return null
 		}
 		// Return user if exists
 		return accountRepository.getAccount(secureToken.accountId)
 	}
 
+	/**
+	 * Update an account.
+	 * @param token Token to verify
+	 * @param account Account to replace
+	 * @exception SQLException Thrown if something went wrong with database
+	 * @exception NotFoundException Thrown if the account isn't found
+	 * @exception AccessDeniedException Thrown if you don't have permission
+	 * @see Token
+	 * @see Account
+	 */
 	@Throws(SQLException::class, NotFoundException::class, AccessDeniedException::class)
-	fun updateAccount(token: Token, accountId: Long, account: Account){
+	fun updateAccount(token: Token, account: Account){
 		val user = verifyToken(token)
 		if(user == null){
 			throw AccessDeniedException("Failed to verify token")
 		}
 		// Check for permissions
-		if(user.accountRole != AccountRole.ADMIN){
-			throw AccessDeniedException("Insufficient permissions")
+		if(user.id != account.id && user.accountRole != AccountRole.ADMIN){
+			throw AccessDeniedException("ID invalid")
+		} else if(user.accountRole == AccountRole.READONLY){
+			throw AccessDeniedException("Cannot edit READONLY account")
+		} else if(user.accountRole != account.accountRole && user.accountRole != AccountRole.ADMIN){
+			throw AccessDeniedException("Insufficient permissions for changing accountRole")
 		}
 
-		assert(accountId == account.id) { "updateAccount: original account ID is not the same as the new accound ID" }
-		if(account.id != accountId){
-			throw AssertionError("")
-		}
 		accountRepository.replaceAccount(account)
 	}
 }

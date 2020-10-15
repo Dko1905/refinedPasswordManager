@@ -199,7 +199,7 @@ class AuthServiceTest(
 
 		account2 = Account(account2.id, "Axel2", "reeee123", AccountRole.USER)
 
-		authService.updateAccount(token!!, account2.id!!, account2)
+		authService.updateAccount(token!!, account2)
 
 		assertNotNull(accountRepository.getAccount(account2.id!!))
 		assertNotNull(accountRepository.getAccount(account2.username))
@@ -223,7 +223,7 @@ class AuthServiceTest(
 
 		var cought = false
 		try{
-			authService.updateAccount(token!!, account2.id!!, account2)
+			authService.updateAccount(token!!, account2)
 		} catch(e: AccessDeniedException){
 			cought = true
 		}
@@ -253,7 +253,7 @@ class AuthServiceTest(
 		// Invalid id on second arg
 		var cought = false
 		try{
-			authService.updateAccount(token!!, oldAccount2.id!!, account2)
+			authService.updateAccount(token!!, account2)
 		} catch(e: AssertionError){
 			cought = true
 		}
@@ -262,7 +262,7 @@ class AuthServiceTest(
 		// Invalid id on first arg
 		cought = false
 		try{
-			authService.updateAccount(token!!, account2.id!!, account2)
+			authService.updateAccount(token!!, account2)
 		} catch(e: NotFoundException){
 			cought = true
 		}

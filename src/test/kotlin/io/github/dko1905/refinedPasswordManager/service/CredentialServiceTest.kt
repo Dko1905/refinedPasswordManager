@@ -187,7 +187,7 @@ class CredentialServiceTest(
 		assertEquals(credential, credentialRepository.getCredential(credential.id!!))
 
 		// Get credentials
-		val credentials = credentialService.getCredentials(token!!)
+		val credentials = credentialService.getCredentials(token)
 		var found = false
 		for(cred in credentials){
 			if(cred == credential){
