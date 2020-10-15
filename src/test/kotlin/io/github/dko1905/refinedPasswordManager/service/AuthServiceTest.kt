@@ -4,6 +4,7 @@ import io.github.dko1905.refinedPasswordManager.domain.Account
 import io.github.dko1905.refinedPasswordManager.domain.AccountRole
 import io.github.dko1905.refinedPasswordManager.repository.AccountRepository
 import io.github.dko1905.refinedPasswordManager.domain.exception.AccessDeniedException
+import io.github.dko1905.refinedPasswordManager.domain.exception.DuplicateKeyException
 import io.github.dko1905.refinedPasswordManager.domain.exception.NotFoundException
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
@@ -254,7 +255,7 @@ class AuthServiceTest(
 		var cought = false
 		try{
 			authService.updateAccount(token!!, account2)
-		} catch(e: AssertionError){
+		} catch(e: NotFoundException){
 			cought = true
 		}
 		assertTrue(cought)
