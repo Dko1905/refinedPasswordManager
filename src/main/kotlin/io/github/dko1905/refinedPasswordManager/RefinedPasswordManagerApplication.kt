@@ -1,5 +1,6 @@
 package io.github.dko1905.refinedPasswordManager
 
+import org.springframework.boot.SpringApplication
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 
@@ -7,5 +8,5 @@ import org.springframework.boot.runApplication
 class RefinedPasswordManagerApplication
 
 fun main(args: Array<String>) {
-	runApplication<RefinedPasswordManagerApplication>(*args)
+	SpringApplication.run(RefinedPasswordManagerApplication::class.java, *args)
 }

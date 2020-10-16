@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.http.HttpStatus
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.server.ResponseStatusException
+import java.lang.reflect.UndeclaredThrowableException
 import java.util.logging.Logger
 import kotlin.jvm.Throws
 
@@ -36,6 +37,23 @@ class CredentialController(
 		return token
 	}
 
+	fun info(e: Exception){
+		if(e is UndeclaredThrowableException){
+			val e2 = e.undeclaredThrowable
+			logger.warning("Caught ${e::class}|${e2::class}: ${e2.message ?: e2.toString()}")
+		} else{
+			logger.info("Caught ${e::class.simpleName}: ${e.message ?: e.toString()}")
+		}
+	}
+	fun warning(e: Exception){
+		if(e is UndeclaredThrowableException){
+			val e2 = e.undeclaredThrowable
+			logger.warning("Caught ${e::class}|${e2::class}: ${e2.message ?: e2.toString()}")
+		} else{
+			logger.warning("Caught ${e::class.simpleName}: ${e.message ?: e.toString()}")
+		}
+	}
+
 	@Throws(ResponseStatusException::class)
 	@GetMapping("/credentials", produces = ["application/json"])
 	fun getCredential(@RequestHeader("X-Auth-Token") tokenHeader: String): List<Credential> {
@@ -50,11 +68,11 @@ class CredentialController(
 				throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message, e)
 			}
 		} catch(e: ResponseStatusException){
-			logger.info("Caught ResponseStatusException: ${e.message}")
+			info(e)
 			throw e
 		} catch(e: Exception){
-			logger.warning("Caught ${e::class.simpleName}: ${e.message}")
-			throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message, e)
+			warning(e)
+			throw e
 		}
 	}
 
@@ -74,10 +92,10 @@ class CredentialController(
 				throw ResponseStatusException(HttpStatus.NOT_FOUND, e.message, e)
 			}
 		} catch(e: ResponseStatusException){
-			logger.info("Caught ResponseStatusException: ${e.message}")
+			info(e)
 			throw e
 		} catch(e: Exception){
-			logger.warning("Caught ${e::class.simpleName}: ${e.message}")
+			warning(e)
 			throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message, e)
 		}
 	}
@@ -96,10 +114,10 @@ class CredentialController(
 				throw ResponseStatusException(HttpStatus.FORBIDDEN, e.message, e)
 			}
 		} catch(e: ResponseStatusException){
-			logger.info("Caught ResponseStatusException: ${e.message}")
+			info(e)
 			throw e
 		} catch(e: Exception){
-			logger.warning("Caught ${e::class.simpleName}: ${e.message}")
+			warning(e)
 			throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message, e)
 		}
 	}
@@ -120,10 +138,10 @@ class CredentialController(
 				throw ResponseStatusException(HttpStatus.NOT_FOUND, e.message, e)
 			}
 		} catch(e: ResponseStatusException){
-			logger.info("Caught ResponseStatusException: ${e.message}")
+			info(e)
 			throw e
 		} catch(e: Exception){
-			logger.warning("Caught ${e::class.simpleName}: ${e.message}")
+			warning(e)
 			throw ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, e.message, e)
 		}
 	}

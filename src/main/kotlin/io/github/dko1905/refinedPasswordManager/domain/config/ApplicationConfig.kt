@@ -32,6 +32,7 @@ class ApplicationConfig {
 		dataSource.url = "jdbc:sqlite:database.db"
 
 		dataSource.connection.use{ connection ->
+			// Create tables if they don't exist
 			val statement = connection.createStatement()
 			statement.execute("CREATE TABLE IF NOT EXISTS ACCOUNT" +
 					"(" +
@@ -57,6 +58,10 @@ class ApplicationConfig {
 					"EXPIRATION_DATE INTEGER NOT NULL," +
 					"FOREIGN KEY(ACCOUNT_ID) REFERENCES ACCOUNT(ID)" +
 					");")
+			// Run some PRAGMA statements
+			statement.execute("PRAGMA synchronous = OFF;") // Don't sync to disk every insert
+			statement.execute("PRAGMA journal_mode = MEMORY;") // Store journal in memory
+			statement.execute("PRAGMA temp_store = MEMORY;") // Store temp tables in memory, might improve performance
 		}
 
 		return dataSource
