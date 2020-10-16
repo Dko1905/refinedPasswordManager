@@ -62,6 +62,7 @@ class ApplicationConfig {
 			statement.execute("PRAGMA synchronous = OFF;") // Don't sync to disk every insert
 			statement.execute("PRAGMA journal_mode = OFF;") // Store journal in memory
 			statement.execute("PRAGMA cache_size = 100000;")
+			statement.execute("PRAGMA busy_timeout=30000;")
 			statement.execute("PRAGMA temp_store = MEMORY;") // Store temp tables in memory, might improve performance
 		}
 
