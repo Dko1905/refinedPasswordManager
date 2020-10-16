@@ -4,7 +4,6 @@ import io.github.dko1905.refinedPasswordManager.domain.Account
 import io.github.dko1905.refinedPasswordManager.domain.AccountRole
 import io.github.dko1905.refinedPasswordManager.repository.AccountRepository
 import io.github.dko1905.refinedPasswordManager.domain.exception.AccessDeniedException
-import io.github.dko1905.refinedPasswordManager.domain.exception.DuplicateKeyException
 import io.github.dko1905.refinedPasswordManager.domain.exception.NotFoundException
 import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
