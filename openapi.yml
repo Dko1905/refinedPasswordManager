@@ -1,16 +1,17 @@
 openapi: 3.0.0
 info:
-  title: "Refined Password Manager"
-  description: "This is a very naive password manager server, but it should be secure enough. Written in Kotlin with the Spring Boot framework."
-  version: 1.0.1
+  title: "Refined Password Manager API"
+  description: "This is a very naive password manager server, but it should be secure. Written in Kotlin with the Spring Boot framework."
+  version: 1.0.2
   contact:
+    name: "Daniel Florescu"
     email: "Daniel.florescu1905@protonmail.ch"
   license:
     name: "BSD 2-Clause \"Simplified\" License"
     url: "https://choosealicense.com/licenses/bsd-2-clause/"
 
 servers:
-  - url: https://api.pm.190405.xyz/v1
+  - url: https://pm.190405.xyz/v2
 tags:
   - name: "credential"
     description: "Operations on credentials"
