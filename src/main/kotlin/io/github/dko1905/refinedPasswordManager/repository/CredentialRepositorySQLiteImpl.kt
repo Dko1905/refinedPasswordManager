@@ -19,6 +19,7 @@ class CredentialRepositorySQLiteImpl(
 	override fun addCredential(credential: Credential): Long {
 		val id: Long
 		dataSource.connection.use { connection ->
+			connection.autoCommit = false
 			connection.prepareStatement(
 				"INSERT INTO CREDENTIAL(ACCOUNT_ID, URL, USERNAME, PASSWORD, EXTRA) VALUES(?, ?, ?, ?, ?);"
 			).use { preparedStatement ->
@@ -50,6 +51,7 @@ class CredentialRepositorySQLiteImpl(
 					throw SQLException("Something went wrong with getting the id of the new Account")
 				}
 			}
+			connection.commit()
 		}
 		return id
 	}

@@ -46,11 +46,35 @@ class AuthService(
 			var token = tokenRepository.getToken(account.id!!)
 			if(token == null){
 				token = tokenFactory.createToken(account.id!!)
-				tokenRepository.putToken(token)
+				var busy = false
+				do{
+					try{
+						tokenRepository.putToken(token)
+						busy = false
+					} catch(e: SQLException){
+						if(e.errorCode == 5){
+							busy = true
+						} else{
+							throw e
+						}
+					}
+				} while(busy)
 			} else if(token.expirationDate.minus(tokenMinTimeleft).isBefore(Instant.now())){
 				// If old
 				token = tokenFactory.createToken(account.id!!)
-				tokenRepository.putToken(token)
+				var busy = false
+				do{
+					try{
+						tokenRepository.putToken(token)
+						busy = false
+					} catch(e: SQLException){
+						if(e.errorCode == 5){
+							busy = true
+						} else{
+							throw e
+						}
+					}
+				} while(busy)
 			} // else not old
 			return token
 		} else{
@@ -101,7 +125,19 @@ class AuthService(
 			throw AccessDeniedException("Insufficient permissions")
 		}
 
-		return accountRepository.addAccount(account) // Return id of newly added user
+		 var busy = false
+		 do{
+			 try{
+				 return accountRepository.addAccount(account)
+			 } catch(e: SQLException){
+				 if(e.errorCode == 5){
+					 busy = true
+				 } else{
+					 throw e
+				 }
+			 }
+		 } while(busy)
+		 throw SQLException("This makes the compiler shut up")
 	}
 
 	/**
@@ -125,7 +161,19 @@ class AuthService(
 			throw AccessDeniedException("Insufficient permissions")
 		}
 
-		accountRepository.removeAccount(accountId)
+		var busy = false
+		do{
+			try{
+				accountRepository.removeAccount(accountId)
+				busy = false
+			} catch(e: SQLException){
+				if(e.errorCode == 5){
+					busy = true
+				} else{
+					throw e
+				}
+			}
+		} while(busy)
 	}
 
 	/**
@@ -144,6 +192,7 @@ class AuthService(
 			return null
 		}
 		// Return user if exists
+
 		return accountRepository.getAccount(secureToken.accountId)
 	}
 
@@ -172,6 +221,18 @@ class AuthService(
 			throw AccessDeniedException("Insufficient permissions for changing accountRole")
 		}
 
-		accountRepository.replaceAccount(account)
+		var busy = false
+		do{
+			try{
+				accountRepository.replaceAccount(account)
+				busy = false
+			} catch(e: SQLException){
+				if(e.errorCode == 5){
+					busy = true
+				} else{
+					throw e
+				}
+			}
+		} while(busy)
 	}
 }

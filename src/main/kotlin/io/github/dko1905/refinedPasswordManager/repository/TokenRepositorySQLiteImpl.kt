@@ -17,6 +17,7 @@ class TokenRepositorySQLiteImpl(
 	 */
 	override fun putToken(token: Token) {
 		dataSource.connection.use { connection ->
+			connection.autoCommit = false
 			connection.prepareStatement("UPDATE TOKEN SET UUID=?, EXPIRATION_DATE=? WHERE ACCOUNT_ID=?;").use { preparedStatement ->
 				preparedStatement.setString(1, token.uuid.toString())
 				preparedStatement.setLong(2, token.expirationDate.epochSecond)
@@ -45,6 +46,7 @@ class TokenRepositorySQLiteImpl(
 					}
 				}
 			}
+			connection.commit()
 		}
 	}
 

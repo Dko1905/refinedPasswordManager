@@ -33,7 +33,20 @@ class CredentialService(
 			throw AccessDeniedException("Failed to verify token")
 		}
 
-		return credentialRepository.getAccountCredentials(user.id!!)
+		var busy: Boolean
+		do{
+			try{
+				return credentialRepository.getAccountCredentials(user.id!!)
+				busy = false
+			} catch(e: SQLException){
+				if(e.errorCode == 5){
+					busy = true
+				} else{
+					throw e
+				}
+			}
+		} while(busy)
+		throw SQLException("This makes the compiler shut up")
 	}
 
 	/**
@@ -66,7 +79,19 @@ class CredentialService(
 			throw AccessDeniedException("Cannot edit READONLY credential")
 		}
 
-		credentialRepository.replaceCredential(credential)
+		var busy: Boolean
+		do{
+			try{
+				credentialRepository.replaceCredential(credential)
+				busy = false
+			} catch(e: SQLException){
+				if(e.errorCode == 5){
+					busy = true
+				} else{
+					throw e
+				}
+			}
+		} while(busy)
 	}
 
 	/**
@@ -95,7 +120,20 @@ class CredentialService(
 			throw AccessDeniedException("Cannot add credential as READONLY account")
 		}
 
-		return credentialRepository.addCredential(credential)
+		var busy: Boolean
+		do{
+			try{
+				return credentialRepository.addCredential(credential)
+				busy = false
+			} catch(e: SQLException){
+				if(e.errorCode == 5){
+					busy = true
+				} else{
+					throw e
+				}
+			}
+		} while(busy)
+		throw SQLException("This makes the compiler shut up")
 	}
 
 	/**

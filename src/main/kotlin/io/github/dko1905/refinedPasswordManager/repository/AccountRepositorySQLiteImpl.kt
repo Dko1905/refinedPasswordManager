@@ -20,6 +20,7 @@ class AccountRepositorySQLiteImpl(
 	override fun addAccount(account: Account): Long {
 		val id: Long;
 		dataSource.connection.use { connection ->
+			connection.autoCommit = false
 			connection.prepareStatement(
 					"INSERT INTO ACCOUNT(USERNAME, PASSWORD, ACCOUNT_ROLE) VALUES(?, ?, ?);"
 			).use { preparedStatement ->
@@ -39,7 +40,6 @@ class AccountRepositorySQLiteImpl(
 						throw e
 					}
 				}
-
 			}
 			connection.prepareStatement("SELECT last_insert_rowid();").use { preparedStatement ->
 				val resultSet = preparedStatement.executeQuery()
@@ -49,6 +49,7 @@ class AccountRepositorySQLiteImpl(
 					throw SQLException("Something went wrong with getting the id of the new account")
 				}
 			}
+			connection.commit()
 		}
 		return id
 	}
@@ -62,7 +63,6 @@ class AccountRepositorySQLiteImpl(
 		dataSource.connection.use { connection ->
 			connection.prepareStatement("DELETE FROM ACCOUNT WHERE ID=?;").use { preparedStatement ->
 				preparedStatement.setLong(1, id)
-
 				val updateCount = preparedStatement.executeUpdate()
 				if(updateCount <= 0){
 					throw NotFoundException("No account found")
