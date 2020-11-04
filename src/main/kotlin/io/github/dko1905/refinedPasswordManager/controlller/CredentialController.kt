@@ -18,6 +18,7 @@ import kotlin.jvm.Throws
 
 @RestController
 @RequestMapping("credential")
+@CrossOrigin(origins = ["*	"])
 class CredentialController(
 		@Autowired private val credentialService: CredentialService
 ) {
@@ -40,7 +41,7 @@ class CredentialController(
 	fun info(e: Exception){
 		if(e is UndeclaredThrowableException){
 			val e2 = e.undeclaredThrowable
-			logger.warning("Caught ${e::class}|${e2::class}: ${e2.message ?: e2.toString()}")
+			logger.warning("Caught ${e::class.simpleName}|${e2::class.qualifiedName}: ${e2.message ?: e2.toString()}")
 		} else{
 			logger.info("Caught ${e::class.simpleName}: ${e.message ?: e.toString()}")
 		}
@@ -48,7 +49,7 @@ class CredentialController(
 	fun warning(e: Exception){
 		if(e is UndeclaredThrowableException){
 			val e2 = e.undeclaredThrowable
-			logger.warning("Caught ${e::class}|${e2::class}: ${e2.message ?: e2.toString()}")
+			logger.warning("Caught ${e::class.simpleName}|${e2::class.qualifiedName}: ${e2.message ?: e2.toString()}")
 		} else{
 			logger.warning("Caught ${e::class.simpleName}: ${e.message ?: e.toString()}")
 		}
