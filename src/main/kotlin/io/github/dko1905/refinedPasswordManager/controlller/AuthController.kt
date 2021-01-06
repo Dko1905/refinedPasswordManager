@@ -24,7 +24,7 @@ import kotlin.jvm.Throws
 
 @RestController
 @RequestMapping("auth")
-@CrossOrigin(origins = ["*"], maxAge = 30)
+@CrossOrigin(origins = ["https://pm.190405.xyz/"], maxAge = 30)
 class AuthController(
 		@Autowired private val authService: AuthService
 ) {
