@@ -18,7 +18,7 @@ import kotlin.jvm.Throws
 
 @RestController
 @RequestMapping("credential")
-@CrossOrigin(origins = ["https://pm.190405.xyz/"], maxAge = 30)
+@CrossOrigin(origins = ["*"], maxAge = 30)
 class CredentialController(
 		@Autowired private val credentialService: CredentialService
 ) {
