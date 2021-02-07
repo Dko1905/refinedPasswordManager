@@ -12,17 +12,17 @@ import javax.sql.DataSource
 class ApplicationConfig {
 	@Bean
 	fun accountRepositoryProvider(@Autowired dataSource: DataSource): AccountRepository {
-		return AccountRepositoryMariaDBImpl(dataSource)
+		return AccountRepositorySQLiteImpl(dataSource)
 	}
 
 	@Bean
 	fun credentialRepositoryProvider(@Autowired dataSource: DataSource): CredentialRepository {
-		return CredentialRepositoryMariaDBImpl(dataSource)
+		return CredentialRepositorySQLiteImpl(dataSource)
 	}
 
 	@Bean
 	fun tokenRepositoryProvider(@Autowired dataSource: DataSource): TokenRepository {
-		return TokenRepositoryMariaDBImpl(dataSource)
+		return TokenRepositorySQLiteImpl(dataSource)
 	}
 
 	fun sqliteDataSourceProvider(): DataSource {
@@ -112,6 +112,6 @@ class ApplicationConfig {
 
 	@Bean
 	fun dataSourceProvider(): DataSource {
-		return mariadbDataSourceProvider()
+		return sqliteDataSourceProvider()
 	}
 }
