@@ -49,10 +49,10 @@ class CredentialRepositoryTest(
 		credential.id = credentialRepository.addCredential(credential)
 
 		assertEquals(credential, credentialRepository.getCredential(credential.id!!))
-		assertEquals(credential, credentialRepository.getAccountCredentials(credential.id!!)[0])
+		assertEquals(credential, credentialRepository.getAccountCredentials(credential.accountId!!)[0])
 
 		val id2 = credentialRepository.addCredential(credential)
-		val credentials = credentialRepository.getAccountCredentials(credential.id!!)
+		val credentials = credentialRepository.getAccountCredentials(credential.accountId!!)
 		assertEquals(id2, credentialRepository.getCredential(id2)!!.id)
 		var includes = false
 		credentials.forEach { c ->
@@ -64,7 +64,7 @@ class CredentialRepositoryTest(
 
 		credentialRepository.removeCredential(credential.id!!)
 		assertNull(credentialRepository.getCredential(credential.id!!))
-		assertEquals(1, credentialRepository.getAccountCredentials(credential.id!!).size)
+		assertEquals(1, credentialRepository.getAccountCredentials(credential.accountId!!).size)
 
 		var cought = false
 		try{

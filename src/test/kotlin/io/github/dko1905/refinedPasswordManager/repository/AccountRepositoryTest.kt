@@ -108,7 +108,7 @@ class AccountRepositoryTest(
 		try{
 			var account3 = Account(
 					null,
-					"username2",
+					"username4",
 					"password2",
 					AccountRole.USER
 			)

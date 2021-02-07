@@ -1,6 +1,7 @@
 package io.github.dko1905.refinedPasswordManager.domain.config
 
 import io.github.dko1905.refinedPasswordManager.repository.*
+import org.mariadb.jdbc.MariaDbDataSource
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
@@ -10,22 +11,21 @@ import javax.sql.DataSource
 @Configuration
 class ApplicationConfig {
 	@Bean
-	fun accountRepositoryProvider(@Autowired dataSource: DataSource): AccountRepository{
-		return AccountRepositorySQLiteImpl(dataSource)
+	fun accountRepositoryProvider(@Autowired dataSource: DataSource): AccountRepository {
+		return AccountRepositoryMariaDBImpl(dataSource)
 	}
 
 	@Bean
-	fun credentialRepositoryProvider(@Autowired dataSource: DataSource): CredentialRepository{
-		return CredentialRepositorySQLiteImpl(dataSource)
+	fun credentialRepositoryProvider(@Autowired dataSource: DataSource): CredentialRepository {
+		return CredentialRepositoryMariaDBImpl(dataSource)
 	}
 
 	@Bean
-	fun tokenRepositoryProvider(@Autowired dataSource: DataSource): TokenRepository{
-		return TokenRepositorySQLiteImpl(dataSource)
+	fun tokenRepositoryProvider(@Autowired dataSource: DataSource): TokenRepository {
+		return TokenRepositoryMariaDBImpl(dataSource)
 	}
 
-	@Bean
-	fun dataSourceProvider(): DataSource{
+	fun sqliteDataSourceProvider(): DataSource {
 		Class.forName("org.sqlite.JDBC")
 
 		val dataSource = SQLiteDataSource()
@@ -67,5 +67,51 @@ class ApplicationConfig {
 		}
 
 		return dataSource
+	}
+
+	fun mariadbDataSourceProvider(): DataSource {
+
+
+		val dataSource = MariaDbDataSource()
+		dataSource.setUrl("jdbc:mysql://localhost:3306/springpmtest?autoReconnect=true&useUnicode=true&characterEncoding=UTF-8&allowMultiQueries=true&useSSL=false")
+		dataSource.userName = "springtestuser"
+		dataSource.setPassword("123123")
+
+		dataSource.connection.use { connection ->
+			val statement = connection.createStatement()
+
+			statement.execute("CREATE TABLE IF NOT EXISTS PM_ACCOUNT" +
+					"(" +
+					"ID INTEGER NOT NULL AUTO_INCREMENT," +
+					"USERNAME VARCHAR(100) UNIQUE NOT NULL," +
+					"PASSWORD VARCHAR(100) NOT NULL," +
+					"ACCOUNT_ROLE INTEGER NOT NULL," +
+					"PRIMARY KEY (ID)" +
+					");")
+			statement.execute("CREATE TABLE IF NOT EXISTS CREDENTIAL" +
+					"(" +
+					"ID INTEGER NOT NULL AUTO_INCREMENT," +
+					"ACCOUNT_ID INTEGER," +
+					"URL VARCHAR(700) NOT NULL," +
+					"USERNAME VARCHAR(700) NOT NULL," +
+					"PASSWORD VARCHAR(700) NOT NULL," +
+					"EXTRA VARCHAR(700) NOT NULL," +
+					"PRIMARY KEY (ID)" +
+					");")
+			statement.execute("CREATE TABLE IF NOT EXISTS TOKEN" +
+					"(" +
+					"ACCOUNT_ID INTEGER NOT NULL AUTO_INCREMENT," +
+					"UUID VARCHAR(50) UNIQUE NOT NULL," +
+					"EXPIRATION_DATE INTEGER NOT NULL," +
+					"PRIMARY KEY (ACCOUNT_ID)" +
+					");")
+		}
+
+		return dataSource
+	}
+
+	@Bean
+	fun dataSourceProvider(): DataSource {
+		return mariadbDataSourceProvider()
 	}
 }
